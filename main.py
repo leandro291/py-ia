@@ -18,24 +18,28 @@ while True:
     match(opc):
         case "1":
 
-            texto = input("Ingrese texto a traducir: ").strip()
+            idioma = input("Ingrese el idioma al cual desea traducir: ").strip()
+            prompt = input("Ingrese texto a traducir: ").strip()
 
             r = client.chat.completions.create(
                 model="deepseek-flash",
                 messages=[
                         {
                             "role": "system", 
-                            "content": "Eres un traductor experto. Traduce al inglés el texto que te envíe el usuario. Responde únicamente con la traducción, sin explicaciones."
+                            "content": f"Eres un traductor experto. Traduce al {idioma} el texto que te envíe el usuario. Responde únicamente con la traducción, sin explicaciones."
                         },
                         {
                             "role": "user",
-                            "content": texto
+                            "content": prompt
                         }
                     ],
-                max_tokens=500,
+                max_tokens=300,
             )
 
             print(r.choices[0].message.content)
+            print(f"Tokens de Entrada: {r.usage.prompt_tokens}")
+            print(f"Tokens de Salida: {r.usage.completion_tokens}")
+            print(f"Tokens gastados totales: {r.usage.total_tokens}")
         case "2":
             print("Saliendo de la aplicacion...")
             break

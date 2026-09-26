@@ -33,11 +33,13 @@ while True:
                             "content": prompt
                         }
                     ],
-                max_tokens=500,
+                max_tokens=300,
             )
 
             print(r.choices[0].message.content)
-            # print(r.model_dump_json(indent=2))
+            print(f"Tokens de Entrada: {r.usage.prompt_tokens}")
+            print(f"Tokens de Salida: {r.usage.completion_tokens}")
+            print(f"Tokens gastados totales: {r.usage.total_tokens}")
         case "2":
             print("Saliendo de la aplicacion...")
             break

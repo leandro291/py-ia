@@ -1,5 +1,6 @@
 from openai import OpenAI
 from dotenv import load_dotenv
+import json
 import os
 
 load_dotenv()
@@ -10,7 +11,7 @@ client = OpenAI(
 )
 
 messages = [
-    {"role": "system", "content": "Eres un traductor experto. Responde únicamente con la traducción, sin explicaciones."}
+    {"role": "system", "content": 'Eres un traductor experto. Responde solo en JSON con este formato: {"traduccion": "...", "idioma_original": "...", "alternativas": ["...", "..."], "nota": "..."}'}
 ]
 
 while True:
@@ -30,11 +31,14 @@ while True:
                 model="deepseek-flash",
                 messages=messages,
                 max_tokens=500,
+                response_format={"type": "json_object"},
+                extra_body={"thinking": {"type": "disabled"}}
             )
 
-            respuesta = r.choices[0].message.content
+            raw = r.choices[0].message.content
+            respuesta = json.loads(raw)
 
-            messages.append({"role": "assistant", "content": respuesta})
+            messages.append({"role": "assistant", "content": raw})
 
             print(respuesta)
             print(f"Tokens de Entrada: {r.usage.prompt_tokens}")
